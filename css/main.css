@@ -6,6 +6,7 @@
     margin-top: 10px;
     margin-bottom: 10px;
     border-radius: 5px;
+    box-shadow: 2px 2px 2px 1px;
 }
 
 .tasks > span.title {

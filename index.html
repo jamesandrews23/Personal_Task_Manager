@@ -15,30 +15,17 @@
         </button>
     </div>
 </nav>
+<!-- main app view -->
 <div class="container">
     <div class="row">
-        <div id="start" class="col-xs-4 bg-danger">
-            <p>Column1</p>
-            <div class="tasks">
-                <span class="title">
-                    test
-                </span>
-                <button type="button" class="btn btn-default btn-xs pull-right">
-                    <i class="fa fa-pencil"></i>
-                </button>
-                <button type="button" class="btn btn-danger btn-xs pull-right">
-                    <i class="fa fa-remove"></i>
-                </button>
-            </div>
-        </div>
-        <div id="in_progress" class="col-xs-4 bg-warning">
-            <p>column2</p>
-        </div>
-        <div id="complete" class="col-xs-4 bg-success">
-            <p>column3</p>
+        <div id="app">
+            <div id="start" class="col-xs-4 bg-danger"></div>
+            <div id="in_progress" class="col-xs-4 bg-warning"></div>
+            <div id="complete" class="col-xs-4 bg-success"></div>
         </div>
     </div>
 </div>
+<!-- task form -->
 <div class="modal fade" id="add_task" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -75,11 +62,13 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Add Task</button>
+                <button type="submit" class="btn btn-primary" id="add_task_button">Add Task</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<!-- templates -->
 <template id="task_template">
     <div class="tasks">
         <span class="title"><%= title %></span>
@@ -95,6 +84,7 @@
 <script type="text/javascript" src="js/underscore/underscore.js"></script>
 <script type="text/javascript" src="js/backbone/backbone.js"></script>
 <script type="text/javascript" src="css/bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript" src="js/task_manager.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
 </body>
 </html>
