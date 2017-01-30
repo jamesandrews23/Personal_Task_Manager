@@ -1,58 +1,74 @@
-console.log('here');
 +function($){
     "use strict";
-    // var create_task_button = document.getElementById('add_task_button');
-    // create_task_button.addEventListener('click', submit_form);
-    // document.forms['add_task_form'].addEventListener('submit', submit_form);
-    document.getElementById('add_task_form').addEventListener('submit', submit_form);
-    
+
+    document.getElementById('add_task_button').addEventListener('click', submit_form);
+
     function submit_form(e){
-        var form = document.forms['add_task_form'].elements;
-        for(var i = 0; i < form.length; i++){
-            
-        }
+        e.preventDefault();
+        var form_elements = document.forms['add_task_form'].elements;
+        tasks.add({
+            title: form_elements[0].value,
+            description: form_elements[1].value,
+            category: form_elements[2].value
+        });
     }
 
-    var CATEGORY = {
-        START       : {value: 0, name: 'Started', code: 'S'},
-        PROGRESS    : {value: 1, name: 'In Progress', code: 'P'},
-        COMPLETE    : {value: 2, name: 'Completed', code: 'C'}
-    };
+
     
     var Task_Model = Backbone.Model.extend({
         defaults: function(){
             return {
-                title: "The Title",
-                description: "Description of project",
-                category: CATEGORY.START
+                title: "Project",
+                description: "A brief description of project.",
+                category: 0,
+                time: Date.now()
             }
         }
     });
 
-    var Tasks = Backbone.Collection.extend({
+    var Tasks_List = Backbone.Collection.extend({
         model: Task_Model,
         
         initialize: function(){
             
-        }
+        },
+
+        comparator: 'time'
     });
 
+    var tasks = new Tasks_List;
+
     var Task_View = Backbone.View.extend({
-        el: '.tasks',
         template: _.template($('#task_template').html()),
 
-        initialize: function(){
+        events: {
+            "click .task-edit"      :   "edit",
+            "click .task-delete"    :   "remove"
+        },
 
+        initialize: function(){
+            _.bindAll(this, "edit", "remove");
         },
 
         render: function(){
+            this.$el.html(
+                this.template({title: this.model.get('title')})
+            );
             return this;
+        },
+        
+        edit: function(){
+            console.log("edit");
+        },
+        
+        remove: function(){
+            console.log("removed");
         }
     });
 
     var Application_View = Backbone.View.extend({
         el: '#app',
-        collection: Tasks,
+        collection: tasks,
         
         events: {
             
@@ -65,15 +81,29 @@ console.log('here');
         },
         
         add_task: function(task){
-            
+            var a_task = new Task_View({model: task});
+            switch(task.get('category')){
+                case "start":
+                    this.$el.find('#col_start').append(a_task.render().el);
+                    break;
+                case "progress":
+                    this.$el.find('#col_progress').append(a_task.render().el);
+                    break;
+                case "complete":
+                    this.$el.find('#col_complete').append(a_task.render().el);
+                    break;
+                default:
+                    this.$el.find('#col_start').append(a_task.render().el);
+                    break;
+            }
         },
         
         remove_task: function(task){
-            
+            console.log("task to be removed" + task);
         },
         
         reset_tasks: function(tasks){
-            
+            console.log("tasks to be reset" + tasks);
         }
     });
 

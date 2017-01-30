@@ -19,9 +19,9 @@
 <div class="container">
     <div class="row">
         <div id="app">
-            <div id="start" class="col-xs-4 bg-danger"></div>
-            <div id="in_progress" class="col-xs-4 bg-warning"></div>
-            <div id="complete" class="col-xs-4 bg-success"></div>
+            <div id="col_start" class="col-xs-4 bg-danger"></div>
+            <div id="col_progress" class="col-xs-4 bg-warning"></div>
+            <div id="col_complete" class="col-xs-4 bg-success"></div>
         </div>
     </div>
 </div>
@@ -53,7 +53,7 @@
                         <div class="col-sm-9">
                             <select class="form-control" id="category">
                                 <option value="start">Start</option>
-                                <option value="in_progress">In Progress</option>
+                                <option value="progress">In Progress</option>
                                 <option value="complete">Complete</option>
                             </select>
                         </div>
@@ -69,7 +69,7 @@
 </div><!-- /.modal -->
 
 <!-- templates -->
-<template id="task_template">
+<script type="text/template" id="task_template">
     <div class="tasks">
         <span class="title"><%= title %></span>
         <button type="button" class="btn btn-default btn-xs pull-right task-edit">
@@ -79,7 +79,7 @@
             <i class="fa fa-remove"></i>
         </button>
     </div>
-</template>
+</script>
 <script type="text/javascript" src="js/jQuery/jquery-3.1.1.js"></script>
 <script type="text/javascript" src="js/underscore/underscore.js"></script>
 <script type="text/javascript" src="js/backbone/backbone.js"></script>
