@@ -54,6 +54,14 @@
             this.$el.html(
                 this.template({title: this.model.get('title')})
             );
+            this.$el.popover({
+                trigger: 'hover',
+                title: 'Description',
+                placement: 'right',
+                content: this.model.get('description'),
+                html: true,
+                container: 'body'
+            });
             return this;
         },
         
