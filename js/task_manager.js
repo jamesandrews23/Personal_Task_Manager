@@ -6,7 +6,7 @@
     function submit_form(e){
         e.preventDefault();
         var form_elements = document.forms['add_task_form'].elements;
-        tasks.add({
+        tasks.create({
             title: form_elements[0].value,
             description: form_elements[1].value,
             category: form_elements[2].value
@@ -30,7 +30,10 @@
         model: Task_Model,
         
         initialize: function(){
-            
+            var tasks = Storage.get_stored_items();
+            if(tasks){
+                this.set(tasks);
+            }
         },
 
         comparator: 'time'
