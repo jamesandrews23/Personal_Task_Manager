@@ -98,12 +98,12 @@
         template: _.template($('#task_template').html()),
 
         events: {
-            "click .task-edit"      :   "edit",
-            "click .task-delete"    :   "removeTask"
+            "click .task-delete"    :   "removeTask",
+            "click"                 :   "editTask"
         },
 
         initialize: function(){
-            _.bindAll(this, "edit", "removeTask");
+            _.bindAll(this, "editTask", "removeTask");
             this.listenTo(this.model, 'add remove change', console.log('updated'));
         },
 
@@ -122,7 +122,7 @@
             return this;
         },
         
-        edit: function(){
+        editTask: function(){
             console.log("edit");
         },
         
