@@ -16,6 +16,7 @@
 
     
     var Task_Model = Backbone.Model.extend({
+
         defaults: function(){
             return {
                 title: "Project",
@@ -23,34 +24,87 @@
                 category: 0,
                 time: Date.now()
             }
+        },
+
+        initialize: function(){
+            _.bindAll(this, "generateID", "serialize");
+        },
+
+        generateID: function(){
+            return guid();
+        },
+
+        sync: function(method, model, options){
+            switch(method){
+                case "create":
+                    if(model.isNew()){
+                        model.set("idAttribute", this.generateID());
+                        localStorage.setItem(model.get("idAttribute"), this.serialize(model));
+                    }
+                    break;
+                case "update":
+                    localStorage.setItem(model.get("idAttribute"), this.serialize(model));
+                    break;
+                case "read":
+                    return localStorage.getItem(model.get("idAttribute"));
+                    break;
+                case "delete":
+                    localStorage.removeItem(model.get("idAttribute"));
+                    break;
+            }
+        },
+
+        serialize: function(model){
+            return JSON.stringify(model.toJSON());
         }
     });
 
     var Tasks_List = Backbone.Collection.extend({
         model: Task_Model,
-        
+        comparator: 'time',
+
         initialize: function(){
-            var tasks = Storage.get_stored_items();
-            if(tasks){
-                this.set(tasks);
-            }
+            // var tasks = Storage.get_stored_items();
+            // if(tasks){
+            //     this.set(tasks);
+            // }
+            this.fetch();
         },
 
-        comparator: 'time'
+        sync: function(method, model, options){
+            switch(method){
+                case "create":
+                    Storage.set_stored_items(model);
+                    break;
+                case "read":
+                    Storage.get_stored_items(model.id);
+                    break;
+                case "update":
+                    Storage.set_stored_items(model);
+                    break;
+                case "delete":
+                    Storage.remove_stored_items(model.id);
+                    break;
+                default:
+                    break;
+            }
+        }
     });
 
     var tasks = new Tasks_List;
 
     var Task_View = Backbone.View.extend({
+        model: Task_Model,
         template: _.template($('#task_template').html()),
 
         events: {
             "click .task-edit"      :   "edit",
-            "click .task-delete"    :   "remove"
+            "click .task-delete"    :   "removeTask"
         },
 
         initialize: function(){
-            _.bindAll(this, "edit", "remove");
+            _.bindAll(this, "edit", "removeTask");
+            this.listenTo(this.model, 'add remove change', console.log('updated'));
         },
 
         render: function(){
@@ -72,8 +126,10 @@
             console.log("edit");
         },
         
-        remove: function(){
-            console.log("removed");
+        removeTask: function(){
+            this.model.destroy();
+            this.$el.popover('destroy');
+            this.remove();
         }
     });
 
@@ -89,6 +145,7 @@
             this.listenTo(this.collection, 'add', this.add_task);
             this.listenTo(this.collection, 'remove', this.remove_task);
             this.listenTo(this.collection, 'reset', this.reset_tasks);
+            this.listenTo(this.collection, 'change', this.change_tasks);
         },
         
         add_task: function(task){
@@ -108,9 +165,13 @@
                     break;
             }
         },
+
+        change_tasks: function(tasks){
+            console.log('change');
+        },
         
         remove_task: function(task){
-            console.log("task to be removed" + task);
+            console.log("remove");
         },
         
         reset_tasks: function(tasks){

@@ -39,6 +39,10 @@ var Storage = {
             console.warn("ERROR:set_stored_items");
         }
     },
+    
+    remove_stored_items: function(id){
+        localStorage.removeItem(id);
+    },
 
     //want to treat this as a private method
     _parse_stored_items: function(string) {
@@ -52,22 +56,3 @@ var Storage = {
 };
 
 _.bindAll(Storage, "get_stored_items", "set_stored_items", "_parse_stored_items");
-
-
-+function($){
-    Backbone.sync = function(method, model, options){
-        switch(method){
-            case "create":
-                Storage.set_stored_items(model);
-                break;
-            case "read":
-                break;
-            case "update":
-                break;
-            case "delete":
-                break;
-            default:
-                break;
-        }
-    }
-}(jQuery);
