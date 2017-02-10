@@ -13,7 +13,7 @@
         });
     }
 
-
+    var cache = new StorageManager('task-cache');
     
     var Task_Model = Backbone.Model.extend({
 
@@ -27,35 +27,24 @@
         },
 
         initialize: function(){
-            _.bindAll(this, "generateID", "serialize");
-        },
-
-        generateID: function(){
-            return guid();
+            
         },
 
         sync: function(method, model, options){
             switch(method){
                 case "create":
-                    if(model.isNew()){
-                        model.set("idAttribute", this.generateID());
-                        localStorage.setItem(model.get("idAttribute"), this.serialize(model));
-                    }
+                    cache.setStorageItem(model);
                     break;
                 case "update":
-                    localStorage.setItem(model.get("idAttribute"), this.serialize(model));
+                    cache.updateStorageItem(model);
                     break;
                 case "read":
-                    return localStorage.getItem(model.get("idAttribute"));
+                    cache.getStorageItem(model.get("idAttribute"));
                     break;
                 case "delete":
-                    localStorage.removeItem(model.get("idAttribute"));
+                    cache.removeStorageItem(model.get("idAttribute"));
                     break;
             }
-        },
-
-        serialize: function(model){
-            return JSON.stringify(model.toJSON());
         }
     });
 
@@ -74,16 +63,18 @@
         sync: function(method, model, options){
             switch(method){
                 case "create":
-                    Storage.set_stored_items(model);
+                    console.log("collection create");
                     break;
                 case "read":
-                    Storage.get_stored_items(model.id);
+                    var items = cache.getAllItems();
+                    if(!_.isEmpty(items))
+                        this.set(items);
                     break;
                 case "update":
-                    Storage.set_stored_items(model);
+                    console.log("collection update");
                     break;
                 case "delete":
-                    Storage.remove_stored_items(model.id);
+                    console.log("collection delete");
                     break;
                 default:
                     break;
@@ -146,6 +137,12 @@
             this.listenTo(this.collection, 'remove', this.remove_task);
             this.listenTo(this.collection, 'reset', this.reset_tasks);
             this.listenTo(this.collection, 'change', this.change_tasks);
+            this.render();
+        },
+        
+        render: function(){
+            
+            return this;
         },
         
         add_task: function(task){
