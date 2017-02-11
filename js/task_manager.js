@@ -38,7 +38,7 @@
             default:
                 break;
         }
-    }
+    };
 
     var Task_Model = Backbone.Model.extend({
         defaults: function(){
@@ -119,22 +119,22 @@
         },
 
         initialize: function(){
-            this.listenTo(this.collection, 'add', this.add_task);
-            this.listenTo(this.collection, 'remove', this.remove_task);
-            this.listenTo(this.collection, 'reset', this.reset_tasks);
-            this.listenTo(this.collection, 'change', this.change_tasks);
+            this.listenTo(this.collection, 'add', this.addTask);
+            this.listenTo(this.collection, 'remove', this.removeTask);
+            this.listenTo(this.collection, 'reset', this.resetTask);
+            this.listenTo(this.collection, 'change', this.changeTask);
             this.render();
         },
         
         render: function(){
             var self = this;
             _.each(this.collection.models, function(model){
-                self.add_task(model);
+                self.addTask(model);
             });
             return this;
         },
         
-        add_task: function(task){
+        addTask: function(task){
             var a_task = new Task_View({model: task});
             switch(task.get('category')){
                 case "start":
@@ -152,15 +152,15 @@
             }
         },
 
-        change_tasks: function(tasks){
+        changeTask: function(tasks){
             console.log('change');
         },
         
-        remove_task: function(task){
-            console.log("remove");
+        removeTask: function(task){
+            this.remove(task);
         },
         
-        reset_tasks: function(tasks){
+        resetTask: function(tasks){
             console.log("tasks to be reset" + tasks);
         }
     });
