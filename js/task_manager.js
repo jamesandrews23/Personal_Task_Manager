@@ -141,7 +141,10 @@
         },
         
         render: function(){
-            
+            var self = this;
+            _.each(this.collection.models, function(model){
+                self.add_task(model);
+            });
             return this;
         },
         
