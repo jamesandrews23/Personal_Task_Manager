@@ -119,6 +119,7 @@
         },
 
         initialize: function(){
+            _.bindAll(this, "addTask", "removeTask", "resetTask", "changeTask");
             this.listenTo(this.collection, 'add', this.addTask);
             this.listenTo(this.collection, 'remove', this.removeTask);
             this.listenTo(this.collection, 'reset', this.resetTask);
@@ -157,7 +158,7 @@
         },
         
         removeTask: function(task){
-            this.remove(task);
+            //
         },
         
         resetTask: function(tasks){
