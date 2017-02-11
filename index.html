@@ -8,20 +8,30 @@
     <link href="css/main.css" type="text/css" rel="stylesheet"/>
 </head>
 <body>
-<nav class="navbar navbar-default navbar-static-top">
+<nav class="navbar navbar-default navbar-static-top no-margin">
     <div class="container">
         <button type="button" class="btn btn-primary btn-sm navbar-btn" data-toggle="modal" data-target="#add_task">
             <i class="fa fa-plus"></i>
         </button>
+        <button id="clearAll" type="button" class="btn btn-danger btn-sm navbar-btn">Clear All</button>
     </div>
 </nav>
 <!-- main app view -->
 <div class="container">
     <div class="row">
         <div id="app">
-            <div id="col_start" class="col-xs-4 bg-danger"></div>
-            <div id="col_progress" class="col-xs-4 bg-warning"></div>
-            <div id="col_complete" class="col-xs-4 bg-success"></div>
+            <div class="col-xs-4 bg-danger">
+                <h3 class="text-center">Pending Tasks</h3>
+                <div id="col_start"></div>
+            </div>
+            <div class="col-xs-4 bg-warning">
+                <h3 class="text-center">In Progress</h3>
+                <div id="col_progress"></div>
+            </div>
+            <div class="col-xs-4 bg-success">
+                <h3 class="text-center">Complete</h3>
+                <div id="col_complete"></div>
+            </div>
         </div>
     </div>
 </div>
