@@ -9,7 +9,8 @@ StorageManager.prototype = {
         var id = this._generateUUID();
         if(val instanceof Backbone.Model){
             if(val.isNew()){
-                val.set("idAttribute", id);
+                val.id = id;
+                val.set(val.idAttribute, val.id);
                 localStorage.setItem(id, this._serializeItem(val));
             } else {
                 //if it's not new maybe update?

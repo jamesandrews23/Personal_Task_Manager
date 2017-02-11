@@ -13,10 +13,34 @@
         });
     }
 
-    var cache = new StorageManager('task-cache');
-    
-    var Task_Model = Backbone.Model.extend({
+    var cache = new StorageManager("task-cache");
 
+    Backbone.sync = function(method, model, options){
+        switch(method){
+            case "create":
+                cache.setStorageItem(model);
+                break;
+            case "update":
+                cache.updateStorageItem(model);
+                break;
+            case "read":
+                if(model instanceof Backbone.Model){
+                    cache.getStorageItem(model.get("idAttribute"));
+                } else if(model instanceof Backbone.Collection){
+                    var items = cache.getAllItems();
+                    if(!_.isEmpty(items))
+                        this.set(items);
+                }
+                break;
+            case "delete":
+                cache.removeStorageItem(model.id);
+                break;
+            default:
+                break;
+        }
+    }
+
+    var Task_Model = Backbone.Model.extend({
         defaults: function(){
             return {
                 title: "Project",
@@ -28,23 +52,6 @@
 
         initialize: function(){
             
-        },
-
-        sync: function(method, model, options){
-            switch(method){
-                case "create":
-                    cache.setStorageItem(model);
-                    break;
-                case "update":
-                    cache.updateStorageItem(model);
-                    break;
-                case "read":
-                    cache.getStorageItem(model.get("idAttribute"));
-                    break;
-                case "delete":
-                    cache.removeStorageItem(model.get("idAttribute"));
-                    break;
-            }
         }
     });
 
@@ -58,27 +65,6 @@
             //     this.set(tasks);
             // }
             this.fetch();
-        },
-
-        sync: function(method, model, options){
-            switch(method){
-                case "create":
-                    console.log("collection create");
-                    break;
-                case "read":
-                    var items = cache.getAllItems();
-                    if(!_.isEmpty(items))
-                        this.set(items);
-                    break;
-                case "update":
-                    console.log("collection update");
-                    break;
-                case "delete":
-                    console.log("collection delete");
-                    break;
-                default:
-                    break;
-            }
         }
     });
 
@@ -180,5 +166,4 @@
     });
 
     var app = new Application_View;
-
 }(jQuery);
