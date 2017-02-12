@@ -24,3 +24,8 @@
     margin-bottom: 0;
 }
 
+.dashed-border {
+    border-left: dashed;
+    border-right: dashed;
+}
+
