@@ -84,7 +84,7 @@
         },
 
         initialize: function(){
-            _.bindAll(this, "editTask", "removeTask", "confirmEdit", "cancelEdit");
+            _.bindAll(this, "editTask", "removeTask", "confirmEdit", "cancelEdit", "doneEditing");
             this.listenTo(this.model, 'add remove change', console.log('updated'));
             this.listenTo(this.model, 'invalid', this.updateFormWithErrors);
         },
@@ -116,12 +116,18 @@
         confirmEdit: function(e){
             e.preventDefault();
             this.model.save({
-                
+                title: this.$el.find('.editForm-title').val(),
+                description: this.$el.find('.editForm-desc').val()
             });
+            this.doneEditing();
         },
 
         cancelEdit: function(e){
             e.preventDefault();
+            this.doneEditing();
+        },
+
+        doneEditing: function(){
             this.view = 'view';
             this.render();
         },

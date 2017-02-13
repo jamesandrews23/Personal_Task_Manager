@@ -11,10 +11,10 @@ StorageManager.prototype = {
             if(val.isNew()){
                 val.id = id;
                 val.set(val.idAttribute, val.id);
-                localStorage.setItem(id, this._serializeItem(val));
+                localStorage.setItem(this.id+"_"+id, this._serializeItem(val));
             } else {
                 //if it's not new maybe update?
-                this.updateStorageItem(val.get("idAttribute"), val);
+                this.updateStorageItem(val);
             }
         } else if(val instanceof Backbone.Collection){
             //if it's coming from a collection need to get the items and
@@ -26,7 +26,7 @@ StorageManager.prototype = {
     
     //should the item be removed from storage?
     getStorageItem: function(key){
-        var storedItem = localStorage.getItem(this.id + "_" + key);
+        var storedItem = localStorage.getItem(this.id+"_"+key);
         if(!_.isNull(storedItem)){
             return this._deserializeItem(storedItem);
         } else {
@@ -57,13 +57,19 @@ StorageManager.prototype = {
     },
     
     removeStorageItem: function(key){
-        localStorage.removeItem(key);    
+        localStorage.removeItem(this.id+"_"+key);    
     },
 
-    updateStorageItem: function(key, obj){
-        var storedItem = this.getStorageItem(key);
-        if(!_.isNull(storedItem)){
-            
+    //before calling update through backbone.sync, backbone has already made the check whether or not the model is new
+    updateStorageItem: function(obj) {
+        if (obj instanceof Backbone.Model){
+            var saved = this.getStorageItem(obj.id);
+            if (!_.isNull(saved)){
+                var toSave = obj.toJSON();
+                //merging toSaved into saved and setting saved in localStorage
+                $.extend(true, saved, toSave);
+                localStorage.setItem(this.id+"_"+saved.id, this._serializeItem(saved));
+            }
         }
     },
 
@@ -89,7 +95,7 @@ StorageManager.prototype = {
     },
 
     _generateUUID: function(){
-        return this.id + "_" + uuid();
+        return uuid();
     }
 };
 
