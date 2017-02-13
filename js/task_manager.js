@@ -60,11 +60,12 @@
         comparator: 'time',
 
         initialize: function(){
-            // var tasks = Storage.get_stored_items();
-            // if(tasks){
-            //     this.set(tasks);
-            // }
+            this.listenTo(this, 'remove', this.removeFromCollection);
             this.fetch();
+        },
+
+        removeFromCollection: function(model){
+            this.remove(model);
         }
     });
 
@@ -73,40 +74,75 @@
     var Task_View = Backbone.View.extend({
         model: Task_Model,
         template: _.template($('#task_template').html()),
+        view: "view",
 
         events: {
             "click .task-delete"    :   "removeTask",
-            "click"                 :   "editTask"
+            "click .task-edit"      :   "editTask",
+            "click .task-confirm-edit"  : "confirmEdit",
+            "click .task-cancel-edit" : "cancelEdit"
         },
 
         initialize: function(){
-            _.bindAll(this, "editTask", "removeTask");
+            _.bindAll(this, "editTask", "removeTask", "confirmEdit", "cancelEdit");
             this.listenTo(this.model, 'add remove change', console.log('updated'));
+            this.listenTo(this.model, 'invalid', this.updateFormWithErrors);
         },
 
         render: function(){
             this.$el.html(
-                this.template({title: this.model.get('title')})
+                this.template({title: this.model.get('title'), view: this.view, desc: this.model.get('description')})
             );
-            this.$el.popover({
-                trigger: 'hover',
-                title: 'Description',
-                placement: 'right',
-                content: this.model.get('description'),
-                html: true,
-                container: 'body'
-            });
+            if(this.view === 'view')
+                this.$el.popover({
+                    trigger: 'hover',
+                    title: 'Description',
+                    placement: 'right',
+                    content: this.model.get('description'),
+                    html: true,
+                    container: 'body'
+                });
             return this;
         },
         
         editTask: function(){
-            console.log("edit");
+            this.$el.popover('destroy');
+            if(this.view === 'view'){
+                this.view = 'edit';
+                this.render();
+            }
+        },
+
+        confirmEdit: function(e){
+            e.preventDefault();
+            this.model.save({
+                
+            });
+        },
+
+        cancelEdit: function(e){
+            e.preventDefault();
+            this.view = 'view';
+            this.render();
         },
         
         removeTask: function(){
             this.model.destroy();
             this.$el.popover('destroy');
             this.remove();
+        },
+
+        //called by backbone when saving or setting a model
+        validate: function(attributes, options){
+            console.log('validate');
+            //need some validation awesomeness here.
+            //returning nothing means it's valid, return anything else means it's invalid
+            //and will be saved in the models validationError property
+        },
+
+        updateFormWithErrors: function(model, error){
+            //this function will be called when the validate method fails and returns an error.
+            
         }
     });
 
