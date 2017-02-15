@@ -77,10 +77,10 @@
         isEditable: false,
 
         events: {
-            "click .task-delete"    :   "removeTask",
-            "click .task-edit"      :   "editTask",
-            "click .task-confirm-edit"  : "confirmEdit",
-            "click .task-cancel-edit" : "cancelEdit"
+            "click .task-delete"        :   "removeTask",
+            "click .task-edit"          :   "editTask",
+            "click .task-confirm-edit"  :   "confirmEdit",
+            "click .task-cancel-edit"   :   "cancelEdit"
         },
 
         initialize: function(){
@@ -90,9 +90,12 @@
         },
 
         render: function(){
-            this.$el.html(
-                this.template({title: this.model.get('title'), editMode: this.isEditable, desc: this.model.get('description')})
-            );
+            var options = {
+                title: this.model.get('title'), 
+                editMode: this.isEditable, 
+                desc: this.model.get('description')
+            };
+            this.$el.html(this.template({data: options}));
             if(!this.isEditable)
                 this.$el.popover({
                     trigger: 'hover',
