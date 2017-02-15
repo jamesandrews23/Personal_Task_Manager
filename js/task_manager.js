@@ -46,7 +46,8 @@
                 title: "Project",
                 description: "A brief description of project.",
                 category: 0,
-                time: Date.now()
+                time: Date.now(),
+                mode: 'view'
             }
         },
 
@@ -74,7 +75,6 @@
     var Task_View = Backbone.View.extend({
         model: Task_Model,
         template: _.template($('#task_template').html()),
-        isEditable: false,
 
         events: {
             "click .task-delete"        :   "removeTask",
@@ -85,33 +85,17 @@
 
         initialize: function(){
             _.bindAll(this, "editTask", "removeTask", "confirmEdit", "cancelEdit", "doneEditing");
-            this.listenTo(this.model, 'add remove change', console.log('updated'));
             this.listenTo(this.model, 'invalid', this.updateFormWithErrors);
+            this.listenTo(this.model, 'change:mode', this.render);
         },
 
         render: function(){
-            var options = {
-                title: this.model.get('title'), 
-                editMode: this.isEditable, 
-                desc: this.model.get('description')
-            };
-            this.$el.html(this.template({data: options}));
-            if(!this.isEditable)
-                this.$el.popover({
-                    trigger: 'hover',
-                    title: 'Description',
-                    placement: 'right',
-                    content: this.model.get('description'),
-                    html: true,
-                    container: 'body'
-                });
+            this.$el.html(this.template({data: this.model.attributes}));
             return this;
         },
         
         editTask: function(){
-            this.$el.popover('destroy');
-            this.isEditable = true;
-            this.render();
+            this.model.set("mode", "edit");
         },
 
         confirmEdit: function(e){
@@ -129,13 +113,11 @@
         },
 
         doneEditing: function(){
-            this.isEditable = false;
-            this.render();
+            this.model.set("mode", "view");
         },
         
         removeTask: function(){
             this.model.destroy();
-            this.$el.popover('destroy');
             this.remove();
         },
 
@@ -158,7 +140,7 @@
         collection: tasks,
         
         events: {
-            
+            "click #clearAll"   :   "clearAllTasks"
         },
 
         initialize: function(){
@@ -205,7 +187,12 @@
         },
         
         resetTask: function(tasks){
-            console.log("tasks to be reset" + tasks);
+            cache.clearAllItems();
+            this.$el.find('.tasks').remove();
+        },
+        
+        clearAllTasks: function(){
+            this.collection.reset();
         }
     });
 

@@ -52,8 +52,11 @@ StorageManager.prototype = {
     },
 
     clearAllItems: function(){
-        //maybe write something that clears only the cached items
-        localStorage.clear();
+        for(var i = 0; i < localStorage.length; i++){
+            if(localStorage.key(i).match(this.idPattern)){
+                localStorage.removeItem(localStorage.key(i));
+            }
+        }
     },
     
     removeStorageItem: function(key){

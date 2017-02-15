@@ -8,18 +8,18 @@
     <link href="css/main.css" type="text/css" rel="stylesheet"/>
 </head>
 <body>
-<nav class="navbar navbar-default navbar-static-top no-margin">
-    <div class="container">
-        <button type="button" class="btn btn-primary btn-sm navbar-btn" data-toggle="modal" data-target="#add_task">
-            <i class="fa fa-plus"></i>
-        </button>
-        <button id="clearAll" type="button" class="btn btn-danger btn-sm navbar-btn" disabled>Clear All</button>
-    </div>
-</nav>
 <!-- main app view -->
-<div class="container">
-    <div class="row">
-        <div id="app">
+<div id="app">
+    <nav class="navbar navbar-default navbar-static-top no-margin">
+        <div class="container">
+            <button type="button" class="btn btn-primary btn-sm navbar-btn" data-toggle="modal" data-target="#add_task">
+                <i class="fa fa-plus"></i>
+            </button>
+            <button id="clearAll" type="button" class="btn btn-danger btn-sm navbar-btn">Clear All</button>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
             <div class="col-xs-4 bg-danger dashed-border">
                 <h3 class="text-center">Pending</h3>
                 <div id="col_start"></div>
@@ -81,7 +81,7 @@
 <!-- templates -->
 <script type="text/template" id="task_template">
     <div class="tasks">
-        <% if(!data.editMode){ %>
+        <% if(data.mode === "view"){ %>
             <span class="title"><%= data.title %></span>
             <button type="button" class="btn btn-default btn-xs pull-right task-edit">
                 <i class="fa fa-pencil"></i>
@@ -97,7 +97,7 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label">Description</label>
-                    <input type="text" class="form-control editForm-desc" maxlength="150" placeholder="Description" value="<%= data.desc %>"/>
+                    <input type="text" class="form-control editForm-desc" maxlength="150" placeholder="Description" value="<%= data.description %>"/>
                 </div>
             </form>
             <button class="btn btn-xs btn-default btn-default task-confirm-edit">Save</button>
