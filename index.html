@@ -81,7 +81,7 @@
 <!-- templates -->
 <script type="text/template" id="task_template">
     <div class="tasks">
-        <% if(view === "view"){ %>
+        <% if(!editMode){ %>
             <span class="title"><%= title %></span>
             <button type="button" class="btn btn-default btn-xs pull-right task-edit">
                 <i class="fa fa-pencil"></i>
@@ -89,7 +89,7 @@
             <button type="button" class="btn btn-danger btn-xs pull-right task-delete">
                 <i class="fa fa-remove"></i>
             </button>
-        <% } else if(view === "edit") { %>
+        <% } else { %>
             <form class="editForm">
                 <div class="form-group">
                     <label class="control-label">Title</label>

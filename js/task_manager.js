@@ -74,7 +74,7 @@
     var Task_View = Backbone.View.extend({
         model: Task_Model,
         template: _.template($('#task_template').html()),
-        view: "view",
+        isEditable: false,
 
         events: {
             "click .task-delete"    :   "removeTask",
@@ -91,9 +91,9 @@
 
         render: function(){
             this.$el.html(
-                this.template({title: this.model.get('title'), view: this.view, desc: this.model.get('description')})
+                this.template({title: this.model.get('title'), editMode: this.isEditable, desc: this.model.get('description')})
             );
-            if(this.view === 'view')
+            if(!this.isEditable)
                 this.$el.popover({
                     trigger: 'hover',
                     title: 'Description',
@@ -107,10 +107,8 @@
         
         editTask: function(){
             this.$el.popover('destroy');
-            if(this.view === 'view'){
-                this.view = 'edit';
-                this.render();
-            }
+            this.isEditable = true;
+            this.render();
         },
 
         confirmEdit: function(e){
@@ -128,7 +126,7 @@
         },
 
         doneEditing: function(){
-            this.view = 'view';
+            this.isEditable = false;
             this.render();
         },
         
