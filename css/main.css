@@ -1,16 +1,17 @@
 .tasks {
     width: 100%;
     padding: 10px;
-    background-color: #2e6da4;
+    background-color: rgba(255, 255, 255, .15);
     cursor: pointer;
     margin-top: 10px;
     margin-bottom: 10px;
     border-radius: 5px;
     box-shadow: 2px 2px 2px 1px;
+    border: 1px solid #2e6da4;
 }
 
 .tasks > span.title {
-    color: #fff;
+    color: #000;
     font-weight: bold;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
@@ -25,7 +26,7 @@
 }
 
 .dashed-border {
-    border-left: dashed;
-    border-right: dashed;
+    border-left: 1px solid #000;
+    border-right: 1px solid #000;
 }
 
