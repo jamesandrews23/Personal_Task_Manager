@@ -51,12 +51,8 @@ StorageManager.prototype = {
         return list;
     },
 
-    clearAllItems: function(){
-        for(var i = 0; i < localStorage.length; i++){
-            if(localStorage.key(i).match(this.idPattern)){
-                localStorage.removeItem(localStorage.key(i));
-            }
-        }
+    clearAllItems: function() {
+        localStorage.clear();
     },
     
     removeStorageItem: function(key){
