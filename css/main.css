@@ -8,6 +8,7 @@
     border-radius: 5px;
     box-shadow: 2px 2px 2px 1px;
     border: 1px solid #2e6da4;
+    position: relative;
 }
 
 .tasks > span.title {

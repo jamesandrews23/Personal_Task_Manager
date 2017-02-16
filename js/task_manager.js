@@ -101,8 +101,9 @@
         confirmEdit: function(e){
             e.preventDefault();
             this.model.save({
-                title: this.$el.find('.editForm-title').val(),
-                description: this.$el.find('.editForm-desc').val()
+                title: this.$('.editForm-title').val(),
+                description: this.$('.editForm-desc').val(),
+                mode: 'view'
             });
             this.doneEditing();
         },
@@ -118,7 +119,12 @@
         
         removeTask: function(){
             this.model.destroy();
-            this.remove();
+            this.$('.task-edit').hide();
+            this.$('.task-delete').hide();
+            this.$el.animate({
+                opacity: 0,
+                marginRight: '+=70%'
+            }, 400, '', function(){ this.remove(); });
         },
 
         //called by backbone when saving or setting a model
