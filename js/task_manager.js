@@ -45,7 +45,7 @@
             return {
                 title: "Project",
                 description: "A brief description of project.",
-                category: 0,
+                category: "start",
                 time: Date.now(),
                 mode: 'view'
             }
@@ -80,13 +80,15 @@
             "click .task-delete"        :   "removeTask",
             "click .task-edit"          :   "editTask",
             "click .task-confirm-edit"  :   "confirmEdit",
-            "click .task-cancel-edit"   :   "cancelEdit"
+            "click .task-cancel-edit"   :   "cancelEdit",
+            "dragstart"                 :   "dragStart"
         },
 
         initialize: function(){
-            _.bindAll(this, "editTask", "removeTask", "confirmEdit", "cancelEdit", "doneEditing");
+            _.bindAll(this, "editTask", "removeTask", "confirmEdit", "cancelEdit", "doneEditing", "removeView");
             this.listenTo(this.model, 'invalid', this.updateFormWithErrors);
             this.listenTo(this.model, 'change:mode', this.render);
+            this.listenTo(this.model, 'change:category', this.removeView);
         },
 
         render: function(){
@@ -138,6 +140,15 @@
         updateFormWithErrors: function(model, error){
             //this function will be called when the validate method fails and returns an error.
             
+        },
+
+        dragStart: function(ev){
+            ev.originalEvent.dataTransfer.setData("text/plain", this.model.id);
+            ev.originalEvent.dataTransfer.dropEffect = "move";
+        },
+
+        removeView: function(){
+            this.remove();
         }
     });
 
@@ -146,15 +157,18 @@
         collection: tasks,
         
         events: {
-            "click #clearAll"   :   "clearAllTasks"
+            "click #clearAll"           :   "clearAllTasks",
+            "click #add_task_button"    :   "testingTask",
+            "drop"                      :   "dropTask",
+            "dragover"                  :   "dragOver"
         },
 
         initialize: function(){
-            _.bindAll(this, "addTask", "removeTask", "resetTask", "changeTask");
+            _.bindAll(this, "addTask", "removeTask", "resetTask", "changeTask", "dropTask");
             this.listenTo(this.collection, 'add', this.addTask);
             this.listenTo(this.collection, 'remove', this.removeTask);
             this.listenTo(this.collection, 'reset', this.resetTask);
-            this.listenTo(this.collection, 'change', this.changeTask);
+            this.listenTo(this.collection, 'change:category', this.changeTask);
             this.render();
         },
         
@@ -170,22 +184,22 @@
             var a_task = new Task_View({model: task});
             switch(task.get('category')){
                 case "start":
-                    this.$el.find('#col_start').append(a_task.render().el);
+                    this.$('#start').append(a_task.render().el);
                     break;
                 case "progress":
-                    this.$el.find('#col_progress').append(a_task.render().el);
+                    this.$('#progress').append(a_task.render().el);
                     break;
                 case "complete":
-                    this.$el.find('#col_complete').append(a_task.render().el);
+                    this.$('#complete').append(a_task.render().el);
                     break;
                 default:
-                    this.$el.find('#col_start').append(a_task.render().el);
+                    this.$('#start').append(a_task.render().el);
                     break;
             }
         },
 
-        changeTask: function(tasks){
-            console.log('change');
+        changeTask: function(task){
+            this.addTask(task);
         },
         
         removeTask: function(task){
@@ -199,6 +213,25 @@
         
         clearAllTasks: function(){
             this.collection.reset();
+        },
+
+        testingTask: function(e){
+            console.log('testing');
+        },
+
+        dropTask: function(ev){
+            ev.preventDefault();
+            if(ev.target.className.includes('dropZone')){
+                var taskId = ev.originalEvent.dataTransfer.getData('text/plain');
+                var model = this.collection.findWhere({id:taskId});
+                if(model){
+                    model.set("category", ev.target.id);
+                }
+            }
+        },
+
+        dragOver: function (ev) {
+            ev.preventDefault();
         }
     });
 

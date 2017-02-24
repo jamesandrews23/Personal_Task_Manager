@@ -16,6 +16,11 @@ function storageAvailable(type) {
     }
 }
 
+function allowDrop(ev) {
+    ev.preventDefault();
+    console.log("allow drop");
+}
+
 +function(){
     if(storageAvailable('localStorage')){
         //available
