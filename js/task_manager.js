@@ -183,23 +183,24 @@
         addTask: function(task){
             var a_task = new Task_View({model: task});
             switch(task.get('category')){
-                case "start":
-                    this.$('#start').append(a_task.render().el);
+                case "pending":
+                    this.$('#pending').append(a_task.render().el);
                     break;
-                case "progress":
-                    this.$('#progress').append(a_task.render().el);
+                case "started":
+                    this.$('#started').append(a_task.render().el);
                     break;
                 case "complete":
                     this.$('#complete').append(a_task.render().el);
                     break;
                 default:
-                    this.$('#start').append(a_task.render().el);
+                    this.$('#pending').append(a_task.render().el);
                     break;
             }
         },
 
         changeTask: function(task){
             this.addTask(task);
+            task.save();
         },
         
         removeTask: function(task){
